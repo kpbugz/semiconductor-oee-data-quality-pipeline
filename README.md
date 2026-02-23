@@ -116,7 +116,13 @@ When OEE degradation is observed, it is decomposed into Availability, Performanc
 This repository is updated daily as part of a structured learning plan (Weeks 5–8).
 
 ---
+## Production Notes
 
+- This pipeline is designed to **fail fast** on schema or fatal data issues.
+- Quality gates return explicit PASS / WARN / FAIL signals suitable for schedulers (Airflow, cron, CI).
+- Local file paths are used for development; paths can be parameterized for production or cloud storage.
+- Raw production data is intentionally excluded from version control.
+- 
 ## Next Steps
 - Modularize code into separate Python modules
 - Add logging to file
