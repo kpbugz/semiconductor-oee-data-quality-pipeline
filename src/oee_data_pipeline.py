@@ -43,7 +43,7 @@ CONFIG = {
 
 DATASETS = {
     "oee": {
-        "path": r"D:\ASEKH\K02943\Python_Scripts\semicapstone_data\tester_oee_daily.csv",
+        "path": r"D:\Python_Scripts\semicapstone_data\tester_oee_daily.csv",
         "required_columns": REQUIRED_COLUMNS,
         "must_not_be_missing": ["date", "tester_id", "device"],
         "core_metric_cols": [
@@ -60,7 +60,7 @@ DATASETS = {
     },
 
     "devices": {
-        "path": r"D:\ASEKH\K02943\Python_Scripts\semicapstone_data\devices.csv",
+        "path": r"D:\Python_Scripts\semicapstone_data\devices.csv",
         "required_columns": {
             "device": "string",
             "test_time_sec_target": "numeric",
@@ -74,7 +74,7 @@ DATASETS = {
     },
 
     "testers": {
-        "path": r"D:\ASEKH\K02943\Python_Scripts\semicapstone_data\testers.csv",
+        "path": r"D:\Python_Scripts\semicapstone_data\testers.csv",
         "required_columns": {
             "tester_id": "string",
             "platform": "string",
