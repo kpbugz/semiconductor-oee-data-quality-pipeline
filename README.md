@@ -49,14 +49,14 @@ All data is synthetic / anonymized.
 ## How to Run
 
 Run the pipeline on all datasets:
-```bash
 python oee_data_pipeline.py
 
-Run validation on a specific dataset:
-
+---
+Run the pipeline on each dataset:
 python oee_data_pipeline.py --dataset oee
 python oee_data_pipeline.py --dataset devices
 python oee_data_pipeline.py --dataset testers
+
 ---
 
 ## Computed Metrics (Semiconductor KPIs)
