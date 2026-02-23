@@ -1,2 +1,15 @@
-# semiconductor-oee-data-quality
-Config-driven data quality pipeline for semiconductor OEE datasets
+# Semiconductor OEE Data Quality Pipeline
+
+## Overview
+
+## Datasets
+
+## Data Quality Strategy
+
+## Project Structure
+
+## How to Run
+
+## Sample Output
+
+## Why This Project Matters
