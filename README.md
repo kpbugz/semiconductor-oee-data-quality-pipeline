@@ -107,10 +107,10 @@ Rows classified as **MISSING_DATA** or **BAD_DATA** are excluded from KPI comput
 
 ---
 
-```md
 ## Sample Output
 
-```text
+~~~text
+
 2026-02-23 21:30:53,643 - INFO - Starting data quality pipeline
 Success! Loaded 360 rows.
 Read attempt finished
@@ -146,6 +146,8 @@ META        NaN     0.9855             8549169
 NVDA        NaN     0.9864             8903767
 
 2026-02-23 21:30:53,893 - INFO - Pipeline completed successfully.
+
+~~~
 
 ---
 
