@@ -105,10 +105,8 @@ After schema validation and quality gating, the pipeline computes core manufactu
 
 Rows classified as **MISSING_DATA** or **BAD_DATA** are excluded from KPI computation to prevent silent metric corruption.
 
-✔ This section is now **fully closed**  
-✔ Everything below will render normally
-
 ---
+
 ```md
 ## Sample Output
 
@@ -146,6 +144,8 @@ AAPL        NaN     0.9725            16028105
 GOOG        NaN     0.9873             5726919
 META        NaN     0.9855             8549169
 NVDA        NaN     0.9864             8903767
+
+2026-02-23 21:30:53,893 - INFO - Pipeline completed successfully.
 
 ---
 
