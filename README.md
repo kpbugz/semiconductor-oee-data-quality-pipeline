@@ -4,7 +4,7 @@
 
 This project implements a Python-based data quality and OEE (Overall Equipment Effectiveness) pipeline inspired by real semiconductor test-floor operations.
 
-The pipeline validates production data before KPI computation, applies dataset-level quality gates, and computes Availability, Performance, Yield, and OEE using trusted data only. Results are summarized by tester and device to support operational decision-making and prevent misleading production metrics.
+The pipeline validates production data before KPI computation, applies dataset-level quality gates, and computes Availability, Performance, Yield, and OEE. Results are summarized by tester and device to support operational decision-making and prevent misleading production metrics.
 
 This project was built as a capstone while transitioning deeper into data engineering from a manufacturing product engineering role, with strong emphasis on defensive coding, data quality, and domain-driven metric design.
 
@@ -16,7 +16,7 @@ The goal is to:
 
 ## Professional & Domain Context
 
-While my title is Manufacturing Product Engineer, my current role is heavily data-focused.
+While my title is Manufacturing Product Engineer in semiconductors field, my current role is heavily data-focused.
 
 I work extensively with:
 - ETL and structuring of large test log files (.txt) and CSV outputs
