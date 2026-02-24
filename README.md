@@ -175,34 +175,19 @@ Duplicate logging is explicitly prevented to ensure clean, production-ready logs
 
 ~~~text
 
-2026-02-25 01:15:43,026 - INFO - Starting data quality pipeline
-2026-02-25 01:15:43,031 - WARNING - [oee] Type issues: {'date': 'object'}
-2026-02-25 01:15:43,036 - INFO - [oee] Gate PASS: {'core_missing_pct': 0.28, 'warn_pct': 0.5, 'fail_pct': 2.0}
-2026-02-25 01:15:43,168 - INFO - [devices] Gate PASS: {'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
-2026-02-25 01:15:43,171 - WARNING - [testers] Type issues: {'platform': 'int64'}
-2026-02-25 01:15:43,173 - INFO - [testers] Gate PASS: {'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
+2026-02-25 02:03:19,767 - INFO - Starting data quality pipeline
+2026-02-25 02:03:19,774 - WARNING - [oee] Type issues: {'date': 'object'}
+2026-02-25 02:03:19,779 - INFO - [oee] Gate PASS: {'core_missing_pct': 0.28, 'warn_pct': 0.5, 'fail_pct': 2.0}
+2026-02-25 02:03:19,900 - INFO - [devices] Gate PASS: {'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
+2026-02-25 02:03:19,903 - WARNING - [testers] Type issues: {'platform': 'int64'}
+2026-02-25 02:03:19,905 - INFO - [testers] Gate PASS: {'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
 
 --- DATASET STATUS SUMMARY ---
 {'dataset': 'oee', 'status': 'PASS', 'core_missing_pct': 0.28, 'warn_pct': 0.5, 'fail_pct': 2.0}
 {'dataset': 'devices', 'status': 'PASS', 'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
 {'dataset': 'testers', 'status': 'PASS', 'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
-2026-02-25 01:15:43,195 - INFO - OEE KPI rows used: 359 / original OK rows: 359
-2026-02-25 01:15:43,196 - INFO - Pipeline completed successfully.
-
---- TOP TESTERS BY OEE ---
-           avg_oee_pct oee_band  avg_yield_pct  total_units_tested  \
-tester_id                                                            
-T5601-01         90.93    GREEN          98.19             4535469   
-T5600-02         90.89    GREEN          98.21             8707172   
-T5602-01         89.87    GREEN          98.27            17269997   
-T5600-01         89.09    GREEN          98.16             8695322   
-
-           oee_samples  oee_rank  
-tester_id                         
-T5601-01            90         1  
-T5600-02            90         2  
-T5602-01            90         3  
-T5600-01            89         4  
+2026-02-25 02:03:19,927 - INFO - OEE KPI rows used: 359 / original OK rows: 359
+2026-02-25 02:03:19,929 - INFO - Pipeline completed successfully.
 
 --- BOTTOM TESTERS BY OEE (worst first) ---
            avg_oee_pct oee_band  avg_yield_pct  total_units_tested  \
@@ -219,11 +204,30 @@ T5602-01            90         3
 T5600-02            90         2  
 T5601-01            90         1  
 
---- OEE BAND COUNTS ---
+--- BOTTOM DEVICES BY OEE (worst first) ---
+        avg_oee_pct oee_band  avg_yield_pct  total_units_tested  oee_samples  \
+device                                                                         
+AAPL          87.97    GREEN          97.25            16028105          112   
+META          89.27    GREEN          98.55             8549169           79   
+NVDA          92.04    GREEN          98.64             8903767           91   
+GOOG          92.22    GREEN          98.73             5726919           77   
+
+        oee_rank  
+device            
+AAPL           4  
+META           3  
+NVDA           2  
+GOOG           1  
+
+--- OEE BAND COUNTS (TESTERS) ---
 oee_band
 GREEN    4
 Name: count, dtype: int64
 
+--- OEE BAND COUNTS (DEVICES) ---
+oee_band
+GREEN    4
+Name: count, dtype: int64
 ~~~
 
 ---
