@@ -71,15 +71,15 @@ All data is synthetic / anonymized.
 
 Run the pipeline on all datasets:
 
-python oee_data_pipeline.py
+- python oee_data_pipeline.py
 
 ---
 
 Run the pipeline on each dataset:
 
-python oee_data_pipeline.py --dataset oee
-python oee_data_pipeline.py --dataset devices
-python oee_data_pipeline.py --dataset testers
+- python oee_data_pipeline.py --dataset oee
+- python oee_data_pipeline.py --dataset devices
+- python oee_data_pipeline.py --dataset testers
 
 ---
 
@@ -147,6 +147,8 @@ META        NaN     0.9855             8549169
 NVDA        NaN     0.9864             8903767
 
 2026-02-23 21:30:53,893 - INFO - Pipeline completed successfully.
+
+---
 
 ## KPI Interpretation (Operational Context)
 
