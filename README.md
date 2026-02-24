@@ -72,9 +72,7 @@ All data is synthetic / anonymized.
 Run the pipeline on all datasets:
 
 - python oee_data_pipeline.py
-
----
-
+  
 Run the pipeline on each dataset:
 
 - python oee_data_pipeline.py --dataset oee
