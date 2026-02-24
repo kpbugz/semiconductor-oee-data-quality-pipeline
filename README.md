@@ -181,7 +181,6 @@ When OEE degradation is observed, it is decomposed into Availability, Performanc
 
 ## Status
 🚧 **Work in Progress**  
-This repository is updated daily as part of a structured learning plan (Weeks 5–8).
 
 ---
 ## Production Notes
