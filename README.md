@@ -32,6 +32,17 @@ Because inaccurate or incomplete data can directly lead to incorrect OEE reporti
 
 The pipeline design is intentionally grounded in semiconductor test operations rather than abstract data examples.
 
+## Architecture & Design Decisions
+
+This pipeline is intentionally structured to reflect real semiconductor manufacturing constraints.
+
+Key design decisions:
+- **Fail-fast on schema and identifier issues** to prevent corrupt KPIs
+- **Separate data validation from metric computation**
+- **Treat denominators as critical (units_tested, planned_prod_min)**
+- **Apply dataset-level quality gates before row-level metrics**
+- **Compute KPIs only on trusted (OK) rows**
+
 ---
 
 ## Dataset Context (Simulated)
@@ -105,45 +116,113 @@ Rows classified as **MISSING_DATA** or **BAD_DATA** are excluded from KPI comput
 
 ---
 
+## Data Quality Gates
+
+Each dataset passes through explicit quality gates before metrics are computed.
+
+| Gate Level | Meaning |
+|-----------|--------|
+| PASS | Data quality acceptable for KPI computation |
+| WARN | Data usable but requires attention |
+| FAIL | Data blocked from downstream processing |
+
+Example (OEE fact table):
+- WARN if core metric missing rate > 0.5%
+- FAIL if core metric missing rate > 2.0%
+
+Quality gates are designed to surface risk early without overreacting to minor noise.
+
+## Metric Trust Model
+
+Metrics are computed only on rows classified as `OK`.
+
+Rows classified as:
+- `MISSING_DATA`
+- `BAD_DATA`
+
+are **explicitly excluded** from KPI computation to prevent silent metric corruption.
+
+This ensures:
+- OEE is never inflated by invalid denominators
+- Yield is not distorted by partial or malformed records
+- Reported KPIs can be trusted by operations teams
+
+## OEE Bands & Ranking
+
+Average OEE values are classified into operational bands:
+
+| Band | Meaning |
+|----|--------|
+| GREEN | Healthy performance |
+| YELLOW | Requires monitoring |
+| RED | Requires investigation |
+
+Testers are ranked by:
+- Average OEE
+- Sample count (to avoid small-sample bias)
+
+This allows teams to quickly identify both top and underperforming testers.
+
+## Logging & Observability
+
+The pipeline uses structured logging with:
+- Console output for interactive use
+- Optional file logging for scheduled runs
+
+Duplicate logging is explicitly prevented to ensure clean, production-ready logs suitable for CI or schedulers.
+
 ## Sample Output
 
 ~~~text
 
-2026-02-23 21:30:53,643 - INFO - Starting data quality pipeline
-Success! Loaded 360 rows.
-Read attempt finished
-2026-02-23 21:30:53,715 - WARNING - [oee] Type issues: {'date': 'object'}
-2026-02-23 21:30:53,720 - INFO - [oee] Gate PASS: {'core_missing_pct': np.float64(0.28), 'warn_pct': 0.5, 'fail_pct': 2.0}
-Success! Loaded 4 rows.
-Read attempt finished
-2026-02-23 21:30:53,844 - INFO - [devices] Gate PASS: {'core_missing_pct': np.float64(0.0), 'warn_pct': 0.0, 'fail_pct': 0.1}
-Success! Loaded 4 rows.
-Read attempt finished
-2026-02-23 21:30:53,847 - WARNING - [testers] Type issues: {'platform': 'int64'}
-2026-02-23 21:30:53,850 - INFO - [testers] Gate PASS: {'core_missing_pct': np.float64(0.0), 'warn_pct': 0.0, 'fail_pct': 0.1}
+2026-02-25 01:15:43,026 - INFO - Starting data quality pipeline
+2026-02-25 01:15:43,031 - WARNING - [oee] Type issues: {'date': 'object'}
+2026-02-25 01:15:43,036 - INFO - [oee] Gate PASS: {'core_missing_pct': 0.28, 'warn_pct': 0.5, 'fail_pct': 2.0}
+2026-02-25 01:15:43,168 - INFO - [devices] Gate PASS: {'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
+2026-02-25 01:15:43,171 - WARNING - [testers] Type issues: {'platform': 'int64'}
+2026-02-25 01:15:43,173 - INFO - [testers] Gate PASS: {'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
 
 --- DATASET STATUS SUMMARY ---
-{'dataset': 'oee', 'status': 'PASS', 'core_missing_pct': np.float64(0.28), 'warn_pct': 0.5, 'fail_pct': 2.0}
-{'dataset': 'devices', 'status': 'PASS', 'core_missing_pct': np.float64(0.0), 'warn_pct': 0.0, 'fail_pct': 0.1}
-{'dataset': 'testers', 'status': 'PASS', 'core_missing_pct': np.float64(0.0), 'warn_pct': 0.0, 'fail_pct': 0.1}
+{'dataset': 'oee', 'status': 'PASS', 'core_missing_pct': 0.28, 'warn_pct': 0.5, 'fail_pct': 2.0}
+{'dataset': 'devices', 'status': 'PASS', 'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
+{'dataset': 'testers', 'status': 'PASS', 'core_missing_pct': 0.0, 'warn_pct': 0.0, 'fail_pct': 0.1}
+2026-02-25 01:15:43,195 - INFO - OEE KPI rows used: 359 / original OK rows: 359
+2026-02-25 01:15:43,196 - INFO - Pipeline completed successfully.
 
---- TOP TESTER KPIs (avg) ---
-           avg_oee  avg_yield  total_units_tested
-tester_id                                        
-T5600-01       NaN     0.9816             8695322
-T5600-02       NaN     0.9821             8707172
-T5601-01       NaN     0.9819             4535469
-T5602-01       NaN     0.9827            17269997
+--- TOP TESTERS BY OEE ---
+           avg_oee_pct oee_band  avg_yield_pct  total_units_tested  \
+tester_id                                                            
+T5601-01         90.93    GREEN          98.19             4535469   
+T5600-02         90.89    GREEN          98.21             8707172   
+T5602-01         89.87    GREEN          98.27            17269997   
+T5600-01         89.09    GREEN          98.16             8695322   
 
---- TOP DEVICE KPIs (avg) ---
-        avg_oee  avg_yield  total_units_tested
-device                                        
-AAPL        NaN     0.9725            16028105
-GOOG        NaN     0.9873             5726919
-META        NaN     0.9855             8549169
-NVDA        NaN     0.9864             8903767
+           oee_samples  oee_rank  
+tester_id                         
+T5601-01            90         1  
+T5600-02            90         2  
+T5602-01            90         3  
+T5600-01            89         4  
 
-2026-02-23 21:30:53,893 - INFO - Pipeline completed successfully.
+--- BOTTOM TESTERS BY OEE (worst first) ---
+           avg_oee_pct oee_band  avg_yield_pct  total_units_tested  \
+tester_id                                                            
+T5600-01         89.09    GREEN          98.16             8695322   
+T5602-01         89.87    GREEN          98.27            17269997   
+T5600-02         90.89    GREEN          98.21             8707172   
+T5601-01         90.93    GREEN          98.19             4535469   
+
+           oee_samples  oee_rank  
+tester_id                         
+T5600-01            89         4  
+T5602-01            90         3  
+T5600-02            90         2  
+T5601-01            90         1  
+
+--- OEE BAND COUNTS ---
+oee_band
+GREEN    4
+Name: count, dtype: int64
 
 ~~~
 
@@ -179,9 +258,6 @@ When OEE degradation is observed, it is decomposed into Availability, Performanc
 - **OEE drops:**  
   Decompose into Availability, Performance, and Yield before escalation.
 
-## Status
-🚧 **Work in Progress**  
-
 ---
 ## Production Notes
 
@@ -189,6 +265,20 @@ When OEE degradation is observed, it is decomposed into Availability, Performanc
 - Quality gates return explicit PASS / WARN / FAIL signals suitable for schedulers (Airflow, cron, CI).
 - Local file paths are used for development; paths can be parameterized for production or cloud storage.
 - Raw production data is intentionally excluded from version control.
+
+## Known Limitations
+
+- Synthetic data is used (no proprietary production data)
+- No persistence layer yet (in-memory processing)
+- Thresholds are illustrative and should be tuned per factory
+- No alerting or dashboard integration yet
+
+## Roadmap
+
+- Modularize into installable Python package
+- Persist KPIs and quality results to SQL
+- Add historical trend analysis
+- Integrate with dashboards (Power BI / Tableau)
 
 ## Development Notes (AI-Assisted Workflow)
 
