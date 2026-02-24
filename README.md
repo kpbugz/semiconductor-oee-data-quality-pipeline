@@ -14,8 +14,6 @@ The goal is to:
 - Compute core manufacturing metrics such as Yield, Availability, Performance, and OEE
 - Produce actionable summaries by tester and device
 
-This project is built incrementally as a learning capstone while transitioning into a data engineering role.
-
 ## Professional & Domain Context
 
 While my title is Manufacturing Product Engineer, my current role is heavily data-focused.
@@ -33,6 +31,7 @@ Because inaccurate or incomplete data can directly lead to incorrect OEE reporti
 - Designing metrics to reflect how production teams actually consume them
 
 The pipeline design is intentionally grounded in semiconductor test operations rather than abstract data examples.
+
 ---
 
 ## Dataset Context (Simulated)
@@ -71,13 +70,16 @@ All data is synthetic / anonymized.
 ## How to Run
 
 Run the pipeline on all datasets:
-- python oee_data_pipeline.py
+
+python oee_data_pipeline.py
 
 ---
+
 Run the pipeline on each dataset:
-- python oee_data_pipeline.py --dataset oee
-- python oee_data_pipeline.py --dataset devices
-- python oee_data_pipeline.py --dataset testers
+
+python oee_data_pipeline.py --dataset oee
+python oee_data_pipeline.py --dataset devices
+python oee_data_pipeline.py --dataset testers
 
 ---
 
@@ -102,6 +104,11 @@ After schema validation and quality gating, the pipeline computes core manufactu
   → High-level indicator of tester effectiveness
 
 Rows classified as **MISSING_DATA** or **BAD_DATA** are excluded from KPI computation to prevent silent metric corruption.
+
+✔ This section is now **fully closed**  
+✔ Everything below will render normally
+
+---
 
 ## Sample Output
 
@@ -138,6 +145,7 @@ AAPL        NaN     0.9725            16028105
 GOOG        NaN     0.9873             5726919
 META        NaN     0.9855             8549169
 NVDA        NaN     0.9864             8903767
+
 2026-02-23 21:30:53,893 - INFO - Pipeline completed successfully.
 
 ## KPI Interpretation (Operational Context)
